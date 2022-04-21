@@ -11,7 +11,7 @@ import bcrypt from "bcrypt";
 const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 5000;
 mongoose.connect(process.env.CONNECTION_URI);
 const db = mongoose.connection;
 db.once("open", () => console.log("Connected to the databse"));
