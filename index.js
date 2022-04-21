@@ -11,12 +11,11 @@ import bcrypt from "bcrypt";
 const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
-const port = 5000;
-const test = mongoose.connect(process.env.CONNECTION_URI);
+const port = process.env.PORT || 80;
+mongoose.connect(process.env.CONNECTION_URI);
 const db = mongoose.connection;
 db.once("open", () => console.log("Connected to the databse"));
 app.use(cors());
-// main().catch(console.error);
 app.get("/", (req, res) => {
 	console.log("visited");
 	res.send("Hello");
@@ -30,16 +29,12 @@ app.get("/logos", async (req, res) => {
 		res.status(500).send("Couldn't get logos");
 	}
 });
-let user = [];
-app.get("/setcookie", (req, res) => {
-	res.cookie(`Cookie token name`, `encrypted cookie string Value`);
-	res.send("Cookie have been saved successfully");
-});
 
 app.get("/users", async (req, res) => {
 	const users = await User.find();
 	res.send(users);
 });
+
 app.post("/users/:id", async (req, res) => {
 	const {
 		mascot,
@@ -90,7 +85,6 @@ app.get("/users/:id", async (req, res) => {
 
 	const user = await User.findOne({ _id: objectId });
 
-	// res.send("posting to results");
 	if (user) return res.send(user);
 
 	res.status(404).send("User not found");
@@ -131,11 +125,6 @@ app.post("/users", async (req, res) => {
 			}
 		});
 	}
-
-	// console.log(existingUser);
-	// console.log(req.body);
-	// console.log("Post received");
-	// res.send(null);
 });
 app.post("/login", async (req, res) => {
 	const { username, password } = req.body;
@@ -157,12 +146,6 @@ app.post("/login", async (req, res) => {
 		});
 	}
 });
-
-// }
-
-async function findCollection(client, listing) {
-	client.db("NBA-2018-stats").collection("Logos").findOne();
-}
 
 app.listen(port, () => {
 	console.log(`Server running on port: http://localhost:${port}`);
