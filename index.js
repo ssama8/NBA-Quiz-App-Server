@@ -129,7 +129,7 @@ app.post("/users", async (req, res) => {
 app.post("/login", async (req, res) => {
 	const { username, password } = req.body;
 	const user = await User.findOne({ username: username });
-	if (user && password === user.password) {
+	if (user && bcrypt.compareSync(password, user.password)) {
 		res.send({
 			body: {
 				error: false,
